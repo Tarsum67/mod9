@@ -1,87 +1,57 @@
-// TODO: Include packages needed for this application
+const inquirer = require('inquirer');
 const fs = require('fs');
-const inquirer = require('inquier');
-const genReadMe = require('./utills/index');
-const { log } = require('console');
-// const genREADME = require('./genREADME.md')
-// TODO: Create an array of questions for user input
+
 const questions = [
-    {
-        type: "input",
-       message: "What is your GitHub username?",
-        name: 'username'
-    },
+    // Your questions here
+];
 
-
-    {
-        type:'email',
-        message:'What is your email address?',
-        name: 'Email',
-    },
-
-
-    {
-        type:'text',
-        message:'What is your project name?',
-        name:'Project name',
-
-
-    },
-    {
-        type:'text',
-        message:'Please write a short description of your project',
-        name:'description',
-
-
-    },
-    {
-        type: 'list',
-        message: 'What kind of license should your project have?',
-        choices: ['Apache 2.0', 'MIT', 'Boost 1.0', 'ISC', 'None'],
-        name: 'license',
-    },
-    {
-        type: 'input',
-        message: 'what command should be run to install dependencies?',
-        default: 'npm i',
-        name: 'cmddependencies',
-    },
-    {
-        type: 'input',
-        message: 'What command should be run to run tests?',
-        default: 'npm test',
-        name: 'cmdtests',
-    },
-    {
-        type: 'input',
-        message: 'What does the user need to know about using the repo?',
-        name: 'userepo',
-    },
-    {
-        type: 'input',
-        message: 'What does the user need to know about contributing to the repo?',
-        name: 'contribute',
-    },
-
-
-    ];
-
-// TODO: Create a function to write README file
+// Function to write the README file
 function writeToFile(fileName, data) {
-    fs.writeFile(fileName, data,(err) =>{
-        if(err){
+    fs.writeFile(fileName, data, (err) => {
+        if (err) {
             console.error(err);
-        }else{
+        } else {
             console.log('README.md Generated!');
         }
-
     });
-    
 }
-// TODO: Create a function to initialize app
-function init(){
 
+// Function to initialize the app
+function init() {
+    inquirer.prompt(questions).then((answers) => {
+        // Generate the README content based on user's answers
+        const readmeContent = `
+# ${answers.title}
 
+## Description
+${answers.description}
+
+## License
+This project is licensed under the ${answers.license} license.
+
+## Installation
+To install the project dependencies, run the following command:
+\`\`\`
+${answers.cmddependencies}
+\`\`\`
+
+## Tests
+To run tests, use the following command:
+\`\`\`
+${answers.cmdtests}
+\`\`\`
+
+## Usage
+${answers.userepo}
+
+## Contributing
+${answers.contribute}
+`;
+
+        // Write the README content to a file
+        writeToFile('README.md', readmeContent);
+    });
 }
-// Function call to initialize app
+
+// Function call to initialize the app
 init();
